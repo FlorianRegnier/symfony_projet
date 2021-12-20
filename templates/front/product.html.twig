@@ -6,11 +6,17 @@
 
     <h2>        {{ product.name }}          </h2>
 
-    <h3>        {{ product.category.name }}   </h3>  
+    <h4>        {{ product.category.name }}   </h4>  
     
-    <h3>        {{ product.licence.name }}   </h3> 
+    <h4>        {{ product.licence.name }}   </h4> 
 
-    <p>         {{ product.price }}  {{ product.stock }}        </p>
+    <p>         {{ product.price }}        </p>
+
+    {% for media in product.media %}
+
+    <img src="{{ media.src }}" alt="{{ media.alt}}">
+        
+    {% endfor %}
     
     
         

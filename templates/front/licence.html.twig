@@ -8,7 +8,10 @@
     <img src="{{ asset('media/' ~ licence.media ) }}" alt="img">
     <h3>        {{ licence.description }}   </h3>  
     
-
+{% for product in licence.products %}
+    <h3> {{product.name}}</h3>
+    
+{% endfor %}
     
     
         

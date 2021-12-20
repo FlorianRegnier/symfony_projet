@@ -14,9 +14,10 @@
             <a href="{{ path('front_show_product', { 'id' : product.id }) }}" >
                 <h2  > {{ product.name }} </h2> 
             </a>
+            <h3> {{product.price}}</h3>
 
 
-            
+            <img src="{{ product.media[0].src }}" alt="">
         
            
             <h5> Categorie : {{ product.category.name }} </h5>

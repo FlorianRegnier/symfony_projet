@@ -6,7 +6,15 @@
 
     <h2>        {{ category.name }}          </h2>
     <img src="{{ asset('media/' ~ category.media ) }}" alt="img">
-    <h3>        {{ category.description }}   </h3>  
+    <p>        {{ category.description }}   </p>  
+
+
+    {% for product in category.products %} {# car ds le fichier category.php on vois que le lien se fait via products#}
+        <h3>
+        {{product.name}}
+        </h3>
+        
+    {% endfor %}
     
 
     
