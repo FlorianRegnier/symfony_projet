@@ -1,0 +1,26 @@
+{% extends "admin/base.html.twig" %}
+
+
+{% block main %}
+
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <h1>Liste des licences</h1>
+
+    {% for licence in licences %}
+       
+        <a href="{{ path('admin_show_licence', { 'id' : licence.id }) }}" >
+            <h2  > {{ licence.name }} </h2>
+        </a>
+        <h3> {{ licence.description }} </h3>
+                      
+    {% endfor %}
+
+
+
+    
+{% endblock %}

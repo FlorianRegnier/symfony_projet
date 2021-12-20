@@ -1,0 +1,36 @@
+{% extends "front/base.html.twig" %}
+
+
+{% block main %}
+
+    
+
+    <h1>Liste des produits</h1>
+
+    <div class="products">
+        {% for product in products %}
+        <div class="product-card">
+        
+            <a href="{{ path('front_show_product', { 'id' : product.id }) }}" >
+                <h2  > {{ product.name }} </h2> 
+            </a>
+
+
+            
+        
+           
+            <h5> Categorie : {{ product.category.name }} </h5>
+            <h5> Licence : {{ product.licence.name }} </h5>
+
+
+
+            
+
+        </div>
+        {% endfor %}
+    
+    
+    </div>
+
+
+{% endblock %}
