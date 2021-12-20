@@ -50,7 +50,7 @@ class AdminProductController extends AbstractController
        $product = $productRepository->find($id);
 
        
-       $productForm = $this->createForm(ProductType::class, $product); // a changer
+       $productForm = $this->createForm(ProductType::class, $product);
 
        // Utilisation de handleRequest pour demander au formulaire de traiter les infos
        // rentrées dans le formulaire
