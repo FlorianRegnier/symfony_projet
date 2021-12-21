@@ -14,6 +14,20 @@
                 <input type="search" name="term" id="">
                 <input type="submit" value="Rechercher">        
             </form>
+
+		
+
+
+
+		<div class="catego">
+        <h3>Liste de toutes les categories</h3>
+        
+            {% for gcate in gcategories.getAll %}
+
+                <p>{{ gcate.name }}</p>
+            
+            {% endfor %}
+        </div>
 		</header>
 
 		<main>

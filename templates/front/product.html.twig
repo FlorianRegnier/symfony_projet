@@ -3,57 +3,45 @@
 
 {% block main %}
 
+	<h2>{{product.name}}</h2>
+	<h3>{{product.price}}
+		€</h3>
 
-    <h2>        {{ product.name }}          </h2>
+	<h4>{{product.licence.name}}</h4>
+	<h4>{{product.category.name}}</h4>
 
-    <h4>        {{ product.category.name }}   </h4>  
-    
-    <h4>        {{ product.licence.name }}   </h4> 
+	{% for media in product.media %}
 
-    <p>         {{ product.price }}        </p>
+		<img src="{{ media.src }}" alt="{{ media.alt }}">
 
-    {% for media in product.media %}
+	{% endfor %}
 
-    <img src="{{ media.src }}" alt="{{ media.alt}}">
-        
-    {% endfor %}
-    
-    <hr>
+	<hr>
 
-    <div class="comments">
-        
-            <h3>Commentaires</h3>
-        
-        {% for comment  in product.comments %}
-            <h5>Par {{ comment.user.name}} {{ comment.user.firstname}}, le {{ comment.date | date('d-m-Y') }}</h5>
-            <p>{{ comment.content }}</p>
-            <hr>
-        {% endfor %}
+	<h3>Commentaires</h3>
 
-        {% if app.user %}
-            <div >
-            
+	{% for comment in product.comments %}
+		<h4>Par
+			{{ comment.user.name }}
+			{{ comment.user.firstname }}</h4>
+		<h5>
+			Le
+			{{ comment.date | date('d-m-Y') }}</h5>
+		<p>{{ comment.content }}</p>
 
-                {{ form_start(commentForm) }}
-                {{ form_label(commentForm.content, 'Ecrivez votre commentaire :' ) }}
-                {{ form_widget(commentForm.content, {'attr' : {'class'  : 'input', 'placeholder' : 'Ecrivez votre commentaire', 'id' : 'content', 'cols' : '30' , 'rows' : '10' }}) }}
-                {{ form_widget(commentForm.submit, {'attr' : {'class'  : 'button'}, 'label': 'Ajouter'}) }}
-                {{ form_end(commentForm) }}
+		{% if app.user is same as(comment.user) %}
 
+			<a href="{{path('update_comment', {'id' : comment.id})}}">Modifier le commentaire</a>
+			<a href="{{path('delete_comment', {'id' : comment.id})}}">Supprimer le commentaire</a>
 
+		{% endif %}
 
-            </div>
-            {% else %}
-            <div>
-                <p>Vous devez être connecté pour poster un commentaire.</p>
-            </div>
-        {% endif %}
-    </div>
-        
-    
+		<hr>
+	{% endfor %}
 
-
-
-
-    
-{% endblock %}
+	{% if app.user %}
+		{{form(commentForm)}}
+			{% else %}
+				<h2>Vous devez vous connecter pour commenter</h2>
+		{% endif %}
+	{% endblock %}

@@ -1,55 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Log in!
+{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+	<form method="post">
+		{% if error %}
+			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
+		{% if app.user %}
+			<div class="mb-3">
+				You are logged in as
+				{{ app.user.username }},
+				<a href="{{ path('app_logout') }}">Logout</a>
+			</div>
+		{% endif %}
 
-    {% if app.user is null %}
-    
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+		{% if app.user is null  %}
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-      <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-    </form>
 
-    <a href="{{ path('add_user')}}">S'inscrire</a>
-    {% endif %}
+			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			<label for="inputEmail">Email</label>
+			<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+			<label for="inputPassword">Password</label>
+			<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
-    {% if app.user %}
-        <a href="{{ path('update_user', {'id' : app.user.id }) }}">Modifier votre compte</a>
-    {% endif %}
-    
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    
+			<button class="btn btn-lg btn-primary" type="submit">
+				Sign in
+			</button>
+		</form>
+		<a href="{{ path('add_user') }}">S'inscrire</a>
+	{% endif %}
 
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
+	{% if app.user %}
+		<a href="{{ path('update_user', {'id' : app.user.id }) }}">Modifiez votre compte</a>
+		<hr>
 
-  
+		{% for comment in app.user.comments %}
+
+			<h3>{{ comment.product.name }}</h3>
+			<p>{{ comment.content }}</p>
+
+			<a href="{{ path('front_update_comment', {'id' : comment.id}) }}">Modifier le commentaire</a>
+			<a href="{{ path('front_delete_comment', {'id' : comment.id}) }}">Supprimer le commentaire</a>
+			<hr>
+		{% endfor %}
+	{% endif %}
+
+
+	{#
+																					        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+																					        See https://symfony.com/doc/current/security/remember_me.html
+																					
+																					        <div class="checkbox mb-3">
+																					            <label>
+																					                <input type="checkbox" name="_remember_me"> Remember me
+																					            </label>
+																					        </div>
+																					    #}
+
+
 {% endblock %}
