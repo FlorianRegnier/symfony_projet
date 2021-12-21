@@ -2,20 +2,24 @@
 
 namespace App\Controller\Front;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\CategoryRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-
-
-     /**
-     * @Route("/home/", name="home")
+    /**
+     * @Route("/home/", name="front_home")
      */
-    public function home()
+    public function home(CategoryRepository $categoryRepository)
     {
-        dd('hello');
+        $categories = $categoryRepository->findAll();
+        $id = rand(1, 10);
+        $category = $categoryRepository->find($id);
+        if ($category) {
+            return $this->render('front/home.html.twig', ['category' => $category]);
+        } else {
+            return $this->redirectToRoute('front_home');
+        }
     }
-
-
 }
