@@ -18,25 +18,28 @@
         
     {% endfor %}
     
-    
+    <hr>
 
     <div class="comments">
         
             <h3>Commentaires</h3>
         
         {% for comment  in product.comments %}
-            <h4>Par {{ comment.user.email}}, le {{ comment.date | date('d-m-Y') }}</h4>
+            <h5>Par {{ comment.user.name}} {{ comment.user.firstname}}, le {{ comment.date | date('d-m-Y') }}</h5>
             <p>{{ comment.content }}</p>
+            <hr>
         {% endfor %}
 
         {% if app.user %}
             <div >
+            
 
                 {{ form_start(commentForm) }}
                 {{ form_label(commentForm.content, 'Ecrivez votre commentaire :' ) }}
                 {{ form_widget(commentForm.content, {'attr' : {'class'  : 'input', 'placeholder' : 'Ecrivez votre commentaire', 'id' : 'content', 'cols' : '30' , 'rows' : '10' }}) }}
                 {{ form_widget(commentForm.submit, {'attr' : {'class'  : 'button'}, 'label': 'Ajouter'}) }}
                 {{ form_end(commentForm) }}
+
 
 
             </div>

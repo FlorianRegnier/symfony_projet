@@ -57,6 +57,11 @@ class UserController extends AbstractController
     {
        $user = $userRepository->find($id);
        
+       /*
+        plus safe pour secure
+       $user = $this->getUser();
+       */
+       
        $userForm = $this->createForm(UserType::class, $user);
         
        $userForm->handleRequest($request);

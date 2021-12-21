@@ -34,12 +34,12 @@ class ProductController extends AbstractController
     {
         $product = $productRepository->find($id);
 
-        $user = $this->getUser();
+        $user = $this->getUser(); //user connecté car get user prend le user de liddentification mais aps de lentity. donc on pass epar el mail pour recuperer le user de la bdd
 
         if($user)
         {
             $user_mail = $user->getUserIdentifier();
-            $user_true = $userRepository->findBy(['email' => $user_mail]);
+            $user_true = $userRepository->findOneBy(['email' => $user_mail]);
         }
 
         $comment = new Comment();
@@ -48,8 +48,8 @@ class ProductController extends AbstractController
 
         if($commentForm->isSubmitted() && $commentForm->isValid()){
             $comment->setDate(new \DateTime("NOW"));
-            $comment->setProduct($productRepository->find($id));
-            $comment->setUser($user_true[0]);
+            $comment->setProduct($product);
+            $comment->setUser($user_true);
             $entityManager->persist($comment);
             $entityManager->flush();
 
