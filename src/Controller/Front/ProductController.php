@@ -3,7 +3,9 @@
 namespace App\Controller\Front;
 
 use App\Entity\Comment;
+use App\Entity\Like;
 use App\Form\CommentType;
+use App\Repository\LikeRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,6 +91,56 @@ class ProductController extends AbstractController
     }
 
 
+
+
+
+
+    /**
+     * @Route("/front/like/product/{id}/", name="product_like")
+     */
+    public function likeProduct($id, ProductRepository $productRepository, EntityManagerInterface $entityManagerInterface, LikeRepository $likeRepository)
+    {
+        $product = $productRepository->find($id);
+        $user = $this->getUser();
+
+        if(!$user)
+        {
+            return $this->json([
+                'code' => 403,
+                'message' => "Vous devez être connecté"
+            ], 403);
+        }
+
+        if($product->isLikedByUser($user))
+        {
+            $like = $likeRepository->findOneBy([
+                'product' => $product,
+                'user' => $user
+            ]);
+            $entityManagerInterface->remove($like);
+            $entityManagerInterface->flush();
+
+            return $this->json([
+                'code' => 200,
+                'message' => "Le like a été supprimé",
+                'likes' => $likeRepository->count(['product' => $product])
+            ], 200);
+        }
+
+        $like = new Like();
+        $like->setproduct($product);
+        $like->setUser($user);
+
+        $entityManagerInterface->persist($like);
+        $entityManagerInterface->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => "Le like a été enregistré",
+            'likes' => $likeRepository->count(['product' => $product])
+        ], 200);
+
+    }
 
 
     
