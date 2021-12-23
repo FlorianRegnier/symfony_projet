@@ -63,11 +63,23 @@ class Product
      */
     private $likes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Dislike::class, mappedBy="product")
+     */
+    private $dislikes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Command::class, mappedBy="products")
+     */
+    private $commands;
+
     public function __construct()
     {
         $this->media = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->dislikes = new ArrayCollection();
+        $this->commands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -226,11 +238,40 @@ class Product
     }
 
 
+    /**
+     * @return Collection|Dislike[]
+     */
+    public function getDislikes(): Collection
+    {
+        return $this->dislikes;
+    }
+
+    public function addDislike(Dislike $dislike): self
+    {
+        if (!$this->dislikes->contains($dislike)) {
+            $this->dislikes[] = $dislike;
+            $dislike->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDislike(Dislike $dislike): self
+    {
+        if ($this->dislikes->removeElement($dislike)) {
+            // set the owning side to null (unless already changed)
+            if ($dislike->getProduct() === $this) {
+                $dislike->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
 
 
+    
 
-
-    public function isLikedByUser(User $user)
+    public function isLikeByUser(User $user)
     {
         foreach($this->likes as $like)
         {
@@ -242,4 +283,43 @@ class Product
         return false;
     }
     
+    public function isDislikeByUser(User $user)
+    {
+        foreach($this->dislikes as $dislike)
+        {
+            if($dislike->getUser() === $user)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return Collection|Command[]
+     */
+    public function getCommands(): Collection
+    {
+        return $this->commands;
+    }
+
+    public function addCommand(Command $command): self
+    {
+        if (!$this->commands->contains($command)) {
+            $this->commands[] = $command;
+            $command->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommand(Command $command): self
+    {
+        if ($this->commands->removeElement($command)) {
+            $command->removeProduct($this);
+        }
+
+        return $this;
+    }
+
 }

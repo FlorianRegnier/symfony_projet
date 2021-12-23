@@ -2,23 +2,42 @@
 
 
 {% block main %}
+	<hr>
+	<a href="{{ path('front_list_product') }}"> Tous les produits </a>
+	<br>
+	<a href="{{ path('show_cart') }}"> Voir panier </a>
+	<hr>
 
 	<h2>{{product.name}}</h2>
+
 	<a href="{{ path("product_like", {'id' : product.id})  }}" class="btn btn-link js-likes">
         {# app;user est la variable qui enregistre le user connecté si personne nest connecte la variable est vide #}
 
-        {% if app.user and product.isLikedByUser(app.user) %}
+        {% if app.user and product.isLikeByUser(app.user) %}
             <i class="fas fa-thumbs-up"></i>
         {% else %}
             <i class="far fa-thumbs-up"></i>            
         {% endif %}
                 
         <span class="js-likes">{{ product.likes | length}}</span>
-        <span class="js-label">J'aime</span>
-                    
+        <span class="js-label">J'aime</span>                    
 	</a>
-	<h3>{{product.price}}
-		€</h3>
+	<a href="{{ path("product_dislike", {'id' : product.id})  }}" class="btn btn-link js-dislikes">
+        {# app;user est la variable qui enregistre le user connecté si personne nest connecte la variable est vide #}
+
+        {% if app.user and product.isDislikeByUser(app.user) %}
+            <i class="fas fa-thumbs-down"></i>
+        {% else %}
+            <i class="far fa-thumbs-down"></i>            
+        {% endif %}
+                
+        <span class="js-dislikes">{{ product.dislikes | length}}</span>
+        <span class="js-label">Je n'aime pas</span>                    
+	</a>
+
+	<h3>{{product.price}}€</h3>
+
+	<a href="{{ path('add_cart', {'id' : product.id} ) }}">Ajouter au panier</a>
 
 	<h4>{{product.licence.name}}</h4>
 	<h4>{{product.category.name}}</h4>
@@ -59,34 +78,70 @@
 			{% else %}
 				<h2>Vous devez vous connecter pour commenter</h2>
 		{% endif %}
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-		function onClickLike(event) {
-    event.preventDefault();
-    const url = this.href;
-    const spanCount = this.querySelector('span.js-likes');
-    const icone = this.querySelector('i');
-    axios.get(url).then(function (response) {
-    spanCount.textContent = response.data.likes;
-    if (icone.classList.contains('fas')) {
-    icone.classList.replace('fas', 'far');
-    } else {
-    icone.classList.replace('far', 'fas');
-    }
-    }).catch(function (error) {
-        if (error.response.status === 403) {
-            window.alert("Connexion requise");
-        } else {
-            window.alert("Une erreur s'est produite");
-        }
-        })
-    }
-    document.querySelectorAll('a.js-likes').forEach(function (link) {
-    link.addEventListener('click', onClickLike);
-    })
-</script>	
 {% endblock %}
+
+
+{% block js %}
+
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+		<script>
+			function onClickLike(event) {
+event.preventDefault();
+const url = this.href;
+const spanCount = this.querySelector('span.js-likes');
+const icone = this.querySelector('i');
+axios.get(url).then(function (response) {
+spanCount.textContent = response.data.likes;
+if (icone.classList.contains('fas')) {
+icone.classList.replace('fas', 'far')
+} else {
+icone.classList.replace('far', 'fas')
+}
+if (response.data.message == "like ajouté et dislike supprimé") {
+const spanCount3 = document.querySelector('span.js-dislikes');
+const icone3 = document.querySelector('i.fa-thumbs-down');
+spanCount3.textContent = response.data.dislikes;
+if (icone3.classList.contains('fas')) {
+icone3.classList.replace('fas', 'far')
+} else {
+icone3.classList.replace('far', 'fas')
+}
+}
+}).catch(function (error) {
+if (error.response.status === 403) {
+window.alert("Connexion requise");
+} else {
+window.alert("Une erreur s'est produite")
+}
+})
+}
+function onClickDislike(event) {
+event.preventDefault();
+const url1 = this.href;
+const spanCount1 = this.querySelector('span.js-dislikes');
+const icone1 = this.querySelector('i');
+axios.get(url1).then(function (response) {
+spanCount1.textContent = response.data.dislikes;
+if (icone1.classList.contains('fas')) {
+icone1.classList.replace('fas', 'far');
+} else {
+icone1.classList.replace('far', 'fas');
+}
+if (response.data.message == "like supprimé et dislike ajouté") {
+const spanCount2 = document.querySelector('span.js-likes');
+const icone2 = document.querySelector('i.fa-thumbs-up');
+spanCount2.textContent = response.data.likes;
+if (icone2.classList.contains('fas')) {
+icone2.classList.replace('fas', 'far');
+} else {
+icone2.classList.replace('far', 'fas');
+}
+}
+})
+}
+document.querySelector('a.js-likes').addEventListener('click', onClickLike);
+document.querySelector('a.js-dislikes').addEventListener('click', onClickDislike);
+		</script>
+
+	{% endblock %}

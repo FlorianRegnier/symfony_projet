@@ -1,0 +1,15 @@
+{% extends "front/base.html.twig" %}
+
+{% block main %}
+
+	<form action="{{ path('command_create') }}" method="post">
+
+		<input type="text" name="name" placeholder="nom" {% if app.user %} value="{{ app.user.name }} {{ app.user.firstname }}" {% endif %}>
+		<input type="text" name="email" placeholder="mail" {% if app.user %} value="{{ app.user.email }}" {% endif %}>
+		<input type="text" name="adress" placeholder="adress" {% if app.user %} value="{{ app.user.adress }}" {% endif %}>
+		<input type="text" name="city" id="" placeholder="ville" {% if app.user %} value="{{ app.user.city }}" {% endif %}>
+		<input type="text" name="zipcode" id="" placeholder="code postal" {% if app.user %} value="{{ app.user.zipcode }}" {% endif %}>
+		<input type="submit" value="Confirmer">
+	</form>
+
+{% endblock %}
